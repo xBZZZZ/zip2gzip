@@ -1,4 +1,4 @@
-I made this because I wanted to use [`kzip`](https://www.jonof.id.au/kenutils.html)'s deflate engine but `kzip` only created `zip` file.
+I made this because I wanted to use [`kzip`](https://www.jonof.id.au/kenutils.html)'s deflate engine but `kzip` only creates `zip` file.
 ## `zip2gzip --help`
 ```
 usage: zip2gzip < file.zip > file.gz
