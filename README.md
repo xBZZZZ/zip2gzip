@@ -1,14 +1,19 @@
 I made this because I wanted to use [`kzip`](https://www.jonof.id.au/kenutils.html)'s deflate engine but `kzip` only creates `zip` file.
-## `zip2gzip --help`
+## `zip2gzip -h`
 ```
-usage: zip2gzip < file.zip > file.gz
-note: `< file.zip > file.gz` are shell redirections, not arguments
 convert first file in zip archive to gzip without recompressing
 doesn't work with all zip archives
 github: https://github.com/xBZZZZ/zip2gzip
+gzip spec: http://zlib.org/rfc-gzip.html
+parameters:
+  -i{input file path}   set input (zip) file (default stdin)
+  -o{output file path}  set output (gzip) file (default stdout)
+  -s{OS byte}           set OS byte (default -s255)
+  -t                    set FTEXT bit to 1
+  -h or --              write this help to stdout
 ```
 ## how to compile
 ```bash
-CC='zig cc' #or whatever c compiler you want to usage
+export 'CC=zig cc -target x86_64-linux-gnu' #or whatever c compiler you want to use
 ./build.sh
 ```
