@@ -4,8 +4,9 @@
 #include <string.h>
 #include <assert.h>
 
-static_assert(sizeof(char)==1&&sizeof(unsigned char)==1,"char and unsigned char are 8bit");
-static_assert(sizeof(int)>=4&&sizeof(unsigned)>=4,"int and unsigned are >=32bit");
+static_assert(sizeof(char)==1,"8bit char");
+static_assert(sizeof(unsigned char)==1,"8bit unsigned char");
+static_assert(sizeof(unsigned)>=4,"32bit or larger unsigned int");
 
 int main(const int argc,const char**argv){
 	unsigned char buf[BUFSIZE],gziptrailer[8];
@@ -16,7 +17,7 @@ int main(const int argc,const char**argv){
 #define READ(size) if(UNLIKELY(fread(buf,1,size,stdin)!=size))goto readfail
 #define WRITE(buf,size) if(UNLIKELY(fwrite(buf,1,size,stdout)!=size))goto writefail
 	if(argc>1){
-		const char*infilepath=NULL,*outfilepath=NULL,*ostr=NULL,*arg;
+		const char*infilepath=NULL,*outfilepath=NULL,*osstr=NULL,*arg;
 		while(arg=*++argv){
 			if(UNLIKELY(*arg!='-')){
 				setvbuf(stderr,buf,_IOFBF,BUFSIZE);
@@ -33,14 +34,14 @@ another_letter:
 #define VAL_ARG(letter,varname) case letter:if(*++arg)varname=arg;else if(UNLIKELY(!(varname=*++argv)))break;continue
 			VAL_ARG('i',infilepath);
 			VAL_ARG('o',outfilepath);
-			VAL_ARG('s',ostr);
+			VAL_ARG('s',osstr);
 #undef VAL_ARG
 			case 't':
 				gzipheader[3]=1;
 				if(*++arg)goto another_letter;
 				continue;
 			case 'h':
-			case '-':;
+			case '-':
 				setvbuf(stdout,NULL,_IONBF,0);
 				LINE(help,"convert first file in zip archive to gzip without recompressing\n\
 doesn't work with all zip archives\n\
@@ -65,11 +66,11 @@ parameters:\n\
 			fwrite(missing_err,1,37,stderr);
 			return 1;
 		}
-		if(ostr&&UNLIKELY(!sscanf(ostr,"%hhi",gzipheader+9))){
+		if(osstr&&UNLIKELY(!sscanf(osstr,"%hhi",gzipheader+9))){
 			setvbuf(stderr,buf,_IOFBF,BUFSIZE);
 			static const char e[25]="failed to parse os byte: ";
 			fwrite(e,1,25,stderr);
-			fputs(ostr,stderr);
+			fputs(osstr,stderr);
 			goto newline_and_die;
 		}
 		if(infilepath&&UNLIKELY(!freopen(infilepath,"r",stdin))){
