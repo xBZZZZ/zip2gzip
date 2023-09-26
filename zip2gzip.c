@@ -66,7 +66,7 @@ parameters:\n\
 			fwrite(missing_err,1,37,stderr);
 			return 1;
 		}
-		if(osstr&&UNLIKELY(!sscanf(osstr,"%hhi",gzipheader+9))){
+		if(osstr&&UNLIKELY(sscanf(osstr,"%hhi",gzipheader+9)!=1)){
 			setvbuf(stderr,buf,_IOFBF,BUFSIZE);
 			static const char e[25]="failed to parse os byte: ";
 			fwrite(e,1,25,stderr);
